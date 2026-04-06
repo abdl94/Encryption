@@ -15,8 +15,11 @@ This repository is still a learning project, but it now includes small command-l
 │   ├── aes-encrypt.py
 │   └── aes-decrypt.py
 ├── bash/
-│   └── gpg-file.sh
-├── requirements.txt
+│   ├── gpg.sh
+│   └── password_generator.sh
+├── password_generator.py
+├── crypto.requirements.txt
+├── passwdGen.requirements.txt
 └── rsa/
     └── rsa_cli.py
 ```
@@ -31,10 +34,10 @@ This repository is still a learning project, but it now includes small command-l
 Install the dependencies with:
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r crypto.requirements.txt
 ```
 
-Optional configuration:
+Note: The password generators require no external dependencies; they use only Python standard library and bash built-ins respectively.
 
 - copy `.env.example` to `.env`
 - load that `.env` file in your shell or editor if you want to change the default keys, file paths, or RSA key size
@@ -184,6 +187,65 @@ bash/gpg-file.sh encrypt --input ./message.txt --symmetric --output ./message.tx
 bash/gpg-file.sh decrypt --input ./message.txt.gpg --output ./message.txt
 ```
 
+## Password Generators
+
+Two password generator implementations are provided: one in Python and one in Bash. Both support the same options and generate cryptographically secure random passwords.
+
+### Python Version
+
+The Python implementation (`password_generator.py`) uses the cryptographically secure `secrets` module.
+
+**Features:**
+
+- Generates passwords with customizable character types
+- Create multiple passwords at once
+- Support for uppercase, lowercase, digits, and special characters
+- Special modes: digits-only, alphanumeric
+
+**Usage:**
+
+```bash
+python3 password_generator.py              # 16 char password with all types
+python3 password_generator.py -l 32        # 32 character password
+python3 password_generator.py -c 5         # Generate 5 passwords
+python3 password_generator.py -l 20 --no-special  # Without special chars
+python3 password_generator.py --digits-only -l 12 # 12 digit PIN
+python3 password_generator.py --alphanumeric      # Letters and numbers only
+```
+
+### Bash Version
+
+The Bash implementation (`bash/password_generator.sh`) is a pure Bash script with no external dependencies.
+
+**Features:**
+
+- Lightweight, bash-only implementation
+- Same options as Python version
+- Color-coded error messages
+- Works on any Linux/Unix system with Bash
+
+**Usage:**
+
+```bash
+./bash/password_generator.sh              # 16 char password with all types
+./bash/password_generator.sh -l 32        # 32 character password
+./bash/password_generator.sh -c 5         # Generate 5 passwords
+./bash/password_generator.sh -l 20 --no-special  # Without special chars
+./bash/password_generator.sh --digits-only -l 12 # 12 digit PIN
+```
+
+**Both versions support:**
+
+- `-l, --length NUM` - Set password length (default: 16)
+- `-c, --count NUM` - Generate multiple passwords (default: 1)
+- `--no-uppercase` - Exclude uppercase letters
+- `--no-lowercase` - Exclude lowercase letters
+- `--no-digits` - Exclude digits
+- `--no-special` - Exclude special characters
+- `--digits-only` - Generate digits only
+- `--alphanumeric` - Letters and numbers only
+- `-h, --help` - Show help message
+
 ## Notes
 
 These scripts are useful for learning and local experimentation, but they are not production-ready security tooling.
@@ -197,9 +259,11 @@ These scripts are useful for learning and local experimentation, but they are no
 
 This repository now provides:
 
-- `requirements.txt` for dependencies
+- `crypto.requirements.txt` for cryptography dependencies (AES/RSA)
+- `passwdGen.requirements.txt` for password generator dependencies (none)
 - `.env.example` for documented default configuration
 - a working AES encrypt/decrypt CLI
 - a Bash GPG encrypt/decrypt CLI
 - a renamed RSA module that avoids the original import conflict
 - a small RSA CLI for key generation, signing, verification, encryption, and decryption
+- password generators in both Python and Bash with customizable options
