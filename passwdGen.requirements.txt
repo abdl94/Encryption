@@ -1,0 +1,11 @@
+# Password Generators Requirements
+# 
+# The Python password generator uses only standard library modules:
+# - secrets (cryptographically secure random generation)
+# - argparse (command-line argument parsing)
+# - string (character constants)
+#
+# The Bash password generator uses only bash built-in functions
+# and standard Unix tools.
+#
+# No external dependencies are required.
